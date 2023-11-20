@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatrice Web Assembly</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+</head>
+<body>
+    <script>
+            function run_wasm() {
+                /**funzione di collegameto tra il file cpp e il file html
+                 * 
+                 * in questo caso provo a utilizzare le fz dichiarate in calc.cpp
+                 * utilizzando lo stream di WebAssembly
+                */
+                WebAssembly.instantiateStreaming(
+                    fetch("calc.wasm"), {}
+                ).then(res => {
+                    let num = document.getElementById("int-a").value;
+                    console.log(`numero immesso: ${num}`);
+                    console.log(res.instance.exports);
+
+                    let sum = res.instance.exports.main();
+                    console.log(`somma calcolata: ${sum}`);
+
+                })
+            }
+    </script>
+
+    <main>
+        <p>Calcola la somma di tutti i numeri interi fino al numero che vuoi!</p>
+        <label for="int-a">
+            Numero intero
+        </label>
+        <input type="number" name="a" id="int-a">
+        <button onclick="run_wasm()">Calcola!</button>
+    </main>
+
+    
+</body>
+</html>
